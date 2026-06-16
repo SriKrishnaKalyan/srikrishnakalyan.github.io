@@ -140,7 +140,7 @@ nav.scrolled{background:rgba(245,241,232,0.96);backdrop-filter:blur(14px);-webki
 .c-fade-l,.c-fade-r{position:absolute;top:0;bottom:0;width:clamp(3rem,10vw,15rem);z-index:20;pointer-events:none}
 .c-fade-l{left:0;background:linear-gradient(to right,var(--bg) 0%,transparent 100%)}
 .c-fade-r{right:0;background:linear-gradient(to left,var(--bg) 0%,transparent 100%)}
-.c-track{display:flex;gap:clamp(12px,2vw,20px);padding:1.5rem var(--pad) 2.5rem;cursor:grab;-webkit-overflow-scrolling:touch}
+.c-track{display:flex;gap:clamp(12px,2vw,20px);padding:1.5rem 0 2.5rem;cursor:grab;-webkit-overflow-scrolling:touch}
 .c-track:active{cursor:grabbing}
 
 /* PROJECT CARDS — width fluid */
@@ -742,11 +742,20 @@ class Carousel {
     if (!this.wrap || !this.track) return;
     this.origCards = [...this.track.children];
     this.n = this.origCards.length;
-    this.step = 0; this.busy = false; this.paused = false;
-    // Clone cards for seamless loop
-    this.origCards.forEach(c => {
-      const cl = c.cloneNode(true); cl.setAttribute('aria-hidden','true'); this.track.appendChild(cl);
+    this.busy = false; this.paused = false;
+
+    // Clone cards 3x so there's always enough runway on both sides
+    // Layout: [clone-set-A] [original] [clone-set-B] [clone-set-C]
+    const cloneSet = (suffix) => this.origCards.forEach(c => {
+      const cl = c.cloneNode(true);
+      cl.setAttribute('aria-hidden','true');
+      this.track.appendChild(cl);
     });
+    cloneSet('b'); cloneSet('c'); cloneSet('d');
+
+    // Start at the first real card (index n = one full set in)
+    this.step = this.n;
+
     // Touch/drag support
     let startX = 0;
     this.track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
@@ -754,9 +763,11 @@ class Carousel {
       const dx = e.changedTouches[0].clientX - startX;
       if (Math.abs(dx) > 40) dx < 0 ? this._next() : this._prev();
     }, {passive:true});
+
     window.addEventListener('resize', () => this._m(), {passive:true});
     this._m();
-    setInterval(() => this._next(), 2700);
+    // 1 second interval
+    setInterval(() => this._next(), 2000);
     this.wrap.addEventListener('mouseenter', () => this.paused = true);
     this.wrap.addEventListener('mouseleave', () => this.paused = false);
   }
@@ -764,24 +775,45 @@ class Carousel {
     if (!this.origCards[0]) return;
     const gap = parseFloat(getComputedStyle(this.track).gap) || 20;
     this.cw = this.origCards[0].getBoundingClientRect().width + gap;
+    const vw = this.wrap.getBoundingClientRect().width;
+    const cardW = this.origCards[0].getBoundingClientRect().width;
+    this.offset = (vw - cardW) / 2;
+    this._apply(false);
+  }
+  _apply(animate = true) {
+    if (!animate) this.track.style.transition = 'none';
+    this.track.style.transform = `translateX(${this.offset - this.step * this.cw}px)`;
   }
   _next() {
     if (this.paused || this.busy) return;
-    this.busy = true; this.step++;
-    this.track.style.transition = 'transform 0.8s cubic-bezier(0.4,0,0.2,1)';
-    this.track.style.transform = `translateX(-${this.step * this.cw}px)`;
+    this.busy = true;
+    this.step++;
+    this.track.style.transition = 'transform 0.75s cubic-bezier(0.4,0,0.2,1)';
+    this._apply();
     setTimeout(() => {
-      if (this.step >= this.n) { this.track.style.transition = 'none'; this.track.style.transform = 'translateX(0)'; this.step = 0; }
+      // Silently reset to equivalent position in the middle clone set
+      // so we never run out of cards — user never sees the jump
+      if (this.step >= this.n * 3) {
+        this.step -= this.n;
+        this._apply(false);
+      }
       this.busy = false;
-    }, 850);
+    }, 780);
   }
   _prev() {
     if (this.busy) return;
-    if (this.step <= 0) { this.track.style.transition = 'none'; this.step = this.n - 1; this.track.style.transform = `translateX(-${this.step * this.cw}px)`; }
-    this.busy = true; this.step--;
-    this.track.style.transition = 'transform 0.8s cubic-bezier(0.4,0,0.2,1)';
-    this.track.style.transform = `translateX(-${this.step * this.cw}px)`;
-    setTimeout(() => { this.busy = false; }, 850);
+    this.busy = true;
+    this.step--;
+    this.track.style.transition = 'transform 0.75s cubic-bezier(0.4,0,0.2,1)';
+    this._apply();
+    setTimeout(() => {
+      // Silently reset if we've gone too far back
+      if (this.step < this.n) {
+        this.step += this.n;
+        this._apply(false);
+      }
+      this.busy = false;
+    }, 780);
   }
 }
 
