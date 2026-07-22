@@ -354,6 +354,7 @@ footer{padding:clamp(1.25rem,2.5vh,1.75rem) var(--pad);background:var(--card);bo
       <div class="about-body fade-up">
         <p>I build ML systems that run on real hardware, integrate with real systems, and get deployed — not just trained.</p>
         <p>I hold a Master's in Artificial Intelligence and Machine Learning from the University of Adelaide, and a Master's in Mechatronics from Tor Vergata University of Rome. Before pivoting to AI, I spent time as a Project Engineer at Wipro Technologies, working on SAP Plant Maintenance for UK industrial clients.</p>
+        <p>Alongside the modelling work, I deliberately built the analyst side too. I'm at home in SQL, running experiments, and turning messy data into a decision someone can actually act on.</p>
         <p>Based in Adelaide, SA. Open to ML Engineer, Computer Vision, and Autonomous Systems roles anywhere in Australia.</p>
       </div>
     </div>
@@ -496,7 +497,7 @@ const STATS = [
 const ABOUT_CARDS = [
   { label:'Status',      val:'<strong style="color:#22c55e">Available now</strong> · Actively interviewing · Full working rights (Subclass 485)' },
   { label:'Location',    val:'Based in <strong>Adelaide, SA</strong> · Open to relocate anywhere in Australia' },
-  { label:'Focus Areas', val:'Computer Vision · Edge AI · Autonomous Systems · MLOps' },
+  { label:'Focus Areas', val:'Computer Vision · Edge AI · Autonomous Systems · MLOps · Data &amp; Business Analytics' },
   { label:'Contact',     val:'srikrishnakalyan5@gmail.com · +61 430 037 548' },
 ];
 
@@ -578,6 +579,23 @@ const PROJECTS = [
     tags:['Arduino','TensorFlow/Keras','OpenCV','Python','Bluetooth HC-06','FER-2013','pyttsx3','PCB Design'],
     cardTags:['Arduino','TensorFlow','OpenCV','Bluetooth'],
   },
+  {
+    num:'06', kpiVal:'100K', kpiLab:'orders',
+    title:'Business Analytics — Olist Marketplace',
+    sub:'Root-cause analysis · SQL, Power BI & A/B testing',
+    img:'images/proj-olist.png',
+    desc:'I gave myself a week as the newly-hired analyst at Olist, a real Brazilian marketplace, and worked through the questions a business actually asks. Review scores crashed for two straight months in early 2018. Everyone blamed the sellers and the products, but the real cause turned out to be a carrier delivery failure concentrated in Rio. This project isn\'t about models. It\'s about the craft: writing the SQL, using judgment, and explaining a decision to someone who has to act on it. I already had a Master\'s in AI/ML, so this was me deliberately learning the analyst side from the ground up.',
+    points:[
+      'Traced a two-month review-score collapse to a carrier delivery failure concentrated in Rio. Late orders scored 1.7★ lower than on-time ones.',
+      'Put real numbers on it: around 2,500 late orders, R$350k of GMV affected, and 54% of them landing at one star.',
+      'Built a 13-query SQL request bank covering five different stakeholder teams.',
+      'Wrote up an A/B test with proper statistics, and caught that the experiment\'s randomization was broken before anyone drew conclusions from it.',
+      'Delivered a 3-page Power BI dashboard and an Excel what-if model for running business scenarios.',
+      'No machine learning here, on purpose. It was a ground-up look at the analyst craft.',
+    ],
+    tags:['SQL','MySQL','Power BI','Statistics','A/B Testing','Excel'],
+    cardTags:['SQL','MySQL','Power BI','A/B Testing'],
+  },
 ];
 
 const EXPERIENCE = [
@@ -625,8 +643,8 @@ const EDUCATION = [
 
 const SKILLS = [
   { row:0, tags:['YOLO v5–v12','PyTorch','Computer Vision','ROS2','FastAPI','NVIDIA Jetson','Detectron2','OpenCV','Edge AI','Mask R-CNN','Ultralytics'], blue:true },
-  { row:1, tags:['TensorFlow/Keras','STM32','Python','C/C++','Scikit-learn','Docker','AWS','ArduPilot SITL','Gazebo','Hugging Face','Roboflow','Streamlit','Azure','BigQuery','SQL'], blue:false, rev:true },
-  { row:2, tags:['Pandas','MAVROS','NumPy','Instance Segmentation','Matplotlib','X-CUBE-AI','MATLAB','VINS-Fusion','Java','EGO-Planner','Git / GitHub','Confluence'], blue:null, slow:true },
+  { row:1, tags:['TensorFlow/Keras','STM32','Python','C/C++','Scikit-learn','Docker','AWS','ArduPilot SITL','Gazebo','Hugging Face','Roboflow','Streamlit','Azure','BigQuery','SQL','Power BI'], blue:false, rev:true },
+  { row:2, tags:['Pandas','MAVROS','NumPy','Instance Segmentation','Matplotlib','X-CUBE-AI','MATLAB','VINS-Fusion','Java','EGO-Planner','Git / GitHub','Confluence','Statistics','A/B Testing'], blue:null, slow:true },
 ];
 
 /* ═══════════════════════════════════════════════════════════════
